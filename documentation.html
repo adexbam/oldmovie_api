@@ -1,12 +1,60 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Page Title</title>
-</head>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MyFlix movie api</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+  </head>
 <body>
-
-<h1>MyFlix movie api</h1>
-<p>This is a documentation page for the repository for a movie api.</p>
+  <header>
+      <nav class="navbar navbar-expand-lg navbar-light bg-info fixed-top">
+          <a class="navbar-brand" href="#">MyFlix</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                  <li class="nav-item">
+                      <a class="nav-link" href="#"><b>Home</b> <span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="#"><b>Features</b></a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="#contact"><b>Contact</b></a>
+                  </li>
+              </ul>
+          </div>
+      </nav>
+  </header>
+  <br><br>
+  <div class="container">
+    <h1>Movie api</h1>
+    <p>This is a documentation page for myFlix movie api.</p>
+    <h2>Resource description</h2>
+    <h3>Create</h3>
+    <p>POST /users/:username/favorites</p>
+    <p>POST /users</p>
+    <h3>Read</h3>
+    <p>GET /movies</p>
+    <p>GET /movies/:title</p>
+    <p>GET /movies/:title/genre</p>
+    <p>GET /directors/:name</p>
+    <h3>Update</h3>
+    <p>PUT /users/:username/:password</p>
+    <p>PUT /users/:username/:email/:dateofbirth</p>
+    <h3>Delete</h3>
+    <p>DELETE /users/:username</p>
+    <p>DELETE /users/:username/favorites</p>
+    <h3>Example</h3>
+    <p>app.get('/movies', function(req, res) {
+      res.json(movies);
+    });</p>
+    <p>The above GET request,returns a JSON of a list of ALL movies to the user</p>
+  </div>
 </body>
 </html>
