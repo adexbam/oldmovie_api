@@ -31,30 +31,113 @@
           </div>
       </nav>
   </header>
-  <br><br>
+  <br>
+  <br>
+  <br>
   <div class="container">
-    <h1>Movie api</h1>
-    <p>This is a documentation page for myFlix movie api.</p>
-    <h2>Resource description</h2>
-    <h3>Create</h3>
-    <p>POST /users/:username/favorites</p>
-    <p>POST /users</p>
-    <h3>Read</h3>
-    <p>GET /movies</p>
-    <p>GET /movies/:title</p>
-    <p>GET /movies/:title/genre</p>
-    <p>GET /directors/:name</p>
-    <h3>Update</h3>
-    <p>PUT /users/:username/:password</p>
-    <p>PUT /users/:username/:email/:dateofbirth</p>
-    <h3>Delete</h3>
-    <p>DELETE /users/:username</p>
-    <p>DELETE /users/:username/favorites</p>
-    <h3>Example</h3>
+    <h2>Movie api</h2>
+    <p>This is a documentation page for myFlix movie api that provides users with access to information about different movies, directors, and genres. Users are able to sign up, update their personal information, and create a list of their favorite movies..</p>
+    <h3>Resource description</h3><br>
+    <h4>Example</h4>
     <p>app.get('/movies', function(req, res) {
       res.json(movies);
     });</p>
     <p>The above GET request,returns a JSON of a list of ALL movies to the user</p>
+  </div>
+  <div class="container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Url</th>
+          <th>Query</th>
+          <th>Request</th>
+          <th>Response</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GET</td>
+          <td>/movies</td>
+          <td>localhost:8080/movies</td>
+          <td>Return a list of movies</td>
+          <td>A JSON object holding data about all the movies</td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/movies/:title</td>
+          <td>8080/movies/:title</td>
+          <td>Return data about a single movie by title</td>
+          <td>A JSON object holding data (description, genre, director, image URL) about a single movie by title to the use<br>
+            <code>
+            {
+                title : 'The Godfather',
+                genre : 'Crime',
+                description:'The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.',
+                director: 'Francis Ford Coppola',
+                imageURL: '#'
+            }
+          </code>
+          </td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/movies/:title/genre</td>
+          <td>8080/movies/:title/genre</td>
+          <td>Return data about a genre</td>
+          <td>A JSON object holding data for genre (description) by name/title</td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/directors/:name</td>
+          <td>8080/directors/:name</td>
+          <td>Return info about director by name</td>
+          <td>Return data about a director (bio, birth year, death year) by name</td>
+        </tr>
+        <tr>
+          <td>POST</td>
+          <td>/users</td>
+          <td>8080/users</td>
+          <td>Return users</td>
+          <td>A JSON object holding data about users</td>
+        </tr>
+        <tr>
+          <td>POST</td>
+          <td>/users/:username/favorites</td>
+          <td>8080/users/:username/favorites</td>
+          <td>Allow users to add a movie to their list of favorites</td>
+          <td>A JSON object holding data about users favorite movies</td>
+        </tr>
+        <tr>
+          <td>PUT</td>
+          <td>/users/:username/:password</td>
+          <td>8080/users/:username/:password</td>
+          <td>Allow new users to register</td>
+          <td>Return message</td>
+        </tr>
+        <tr>
+          <td>PUT</td>
+          <td>/users/:username/:email/:dateofbirth</td>
+          <td>8080/users/:username/:email/:dateofbirth</td>
+          <td>Allow users to update their user infor</td>
+          <td>Return message </td>
+        </tr>
+        <tr>
+          <td>DELETE</td>
+          <td>/users/:username</td>
+          <td>8080/users/:username</td>
+          <td>Allow existing users to deregister</td>
+          <td>Return message </td>
+        </tr>
+        <tr>
+          <td>DELETE</td>
+          <td>/users/:username/favorites</td>
+          <td>8080/users/:username/favorites</td>
+          <td>Allow users to remove a movie from their list of favorites</td>
+          <td>Return a message</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </body>
 </html>
