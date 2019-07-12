@@ -1,3 +1,12 @@
+// Integrating Mongoose with a REST API
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+
+const Movies = Models.Movie;
+const Users = Models.User;
+
+mongoose.connect('mongodb://localhost:27017/myFlixDB', {useNewUrlParser: true});
+
 //importing express
 const express = require('express');
 const app = express();
@@ -9,170 +18,183 @@ app.use(express.static('public'));
 app.use(morgan('common'));
 
 //declaring variable for movie list
-let movies = [ {
-    title : 'The Godfather',
-    genre : 'Crime',
-    description:'The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.',
-    director: 'Francis Ford Coppola',
-    imageURL: '#'
-},
-{
-    title : 'Lord of the Rings',
-    genre : 'Drama',
-    description:'The Lord of the Rings is a film series of three epic fantasy adventure films directed by Peter Jackson, based on the eponymous novel written by J. R. R. Tolkien',
-    director: 'Peter Jackson',
-    imageURL: '#'
-},
-{
-    title : 'Twilight',
-    genre : 'Friction',
-    description:'High-school student Bella Swan (Kristen Stewart), always a bit of a misfit, doesn\'t expect life to change much when she moves from sunny Arizona to rainy Washington state.',
-    director: 'Catherine Hardwicke',
-    imageURL: '#'
-},
-{
-    title : 'The Shawshank Redemption',
-    genre : 'Drama',
-    description:'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.',
-    director: 'Frank Darabont',
-    imageURL: '#'
-},
-{
-    title : ' Schindlers List',
-    genre : 'Biography',
-    description:'In German-occupied Poland during World War II, industrialist Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazis.',
-    director: 'Steven Spielberg',
-    imageURL: '#'
-},
-{
-    title : 'Raging Bull',
-    genre : 'Sport',
-    description:'The life of boxer Jake LaMotta, who\'s violence and temper that lead him to the top in the ring destroyed his life outside of it.',
-    director: 'Martin Scorsese',
-    imageURL: '#'
-},
-{
-    title : 'The Wizard of Oz',
-    genre : 'Adventure',
-    description:'When a tornado rips through Kansas, Dorothy (Judy Garland) and her dog, Toto, are whisked away in their house to the magical land of Oz',
-    director: 'Victor Fleming',
-    imageURL: '#'
-},
-{
-    title : 'Gone with the Wind',
-    genre : 'History',
-    description:'Gone with the Wind is a 1939 American epic historical romance film adapted from the 1936 novel by Margaret Mitchell. The film was produced by David O. Selznick of Selznick International Pictures and directed by Victor Fleming.',
-    director: 'Victor Fleming',
-    imageURL: '#'
-},
-{
-    title : 'Citizen Kane',
-    genre : 'Mystery',
-    description:'Following the death of publishing tycoon, Charles Foster Kane, reporters scramble to uncover the meaning of his final utterance; Rosebud.',
-    director: 'Orson Welles',
-    imageURL: '#'
-},
-{
-    title : 'Casablanca',
-    genre : 'Drama',
-    description:'A cynical American expatriate struggles to decide whether or not he should help his former lover and her fugitive husband escape French Morocco.',
-    director: 'Michael Curtiz',
-    imageURL: '#'
-}
-]
-
-let users = [{
-        username: 'Bojibam',
-        email: 'bojibam@mail.com',
-        password: '12345678',
-        dateOfBirth: '01/01/1994',
-        favorites: []
-    },
-    {
-        username: 'Markbam',
-        email: 'mark@mail.com',
-        password: '12345678',
-        dateOfBirth: '03/05/1989',
-        favorites: []
-    }
-];
 
 // GET requests
 app.get('/', function(req, res) {
   res.send('Welcome to myFlix movies!');
 });
 // GET request for JSON object to return a list of ALL movies to the user
-app.get('/movies', function(req, res) {
-  res.json(movies);
-});
-// GET request for JSON object to return data about a single movie by title
-app.get('/movies/:title', function (req, res) {
-    res.json(movies.find(function (movie) {
-        return movie.title === req.params.title
-    }));
-});
-// GET request for JSON object to return data about a genre by title
-app.get('/movies/:title/genre', function (req, res) {
-    let movie = movies.find((movie) => {
-        return movie.title === req.params.title;
-    });
 
-    if (movie) {
-    res.status(201).send('The genre of ' + movie.title + ' is ' + movie.genre);
-} else {
-    res.status(404).send('Movie with the title ' + req.params.title + ' was not found.');
-}
+app.get('/movies', function(req, res) {
+
+  Movies.find()
+  .then(function(movies) {
+    res.status(201).json(movies)
+  })
+  .catch(function(err) {
+    console.error(err);
+    res.status(500).send("Error: " + err);
+  });
 });
+
+
+// Get a movie by title
+app.get('/movies/:title', function(req, res) {
+  Movies.findOne({ Title : req.params.Title })
+  .then(function(movie) {
+    res.json(movie)
+  })
+  .catch(function(err) {
+    console.error(err);
+    res.status(500).send("Error: " + err);
+  });
+});
+
+// GET request for JSON object to return data about a genre by title
+app.get('/movies/:title/genre',function(req,res) {
+  Movies.findOne({"Genre.Name":req.params.Name})
+  .then(function(movie) {
+    res.json(movie.Genre);
+  })
+  .catch(function(err) {
+    console.error(err);
+    res.status(500).send("Error" + err);
+  });
+});
+
 //GET request for JSON object to return data about a director (bio, birth year, death year) by name
-app.get('/directors/:name', function (req, res) {
-    res.send('The director\'s bio, birth year, death year returned.');
+app.get('/directors/:Name',function(req,res) {
+  Movies.findOne({"Director.Name":req.params.Name})
+  .then(function(movie) {
+    res.status(201).json(movie.Director);
+  })
+  .catch(function(err) {
+    console.error(err);
+    res.status(500).send("error" +err);
+  });
 });
 
 //POST that Allows new users to register
-app.post('/users', function (req, res) {
-    let newUser = req.body;
-
-    if (!newUser.username) {
-        const message = 'Missing username';
-        res.status(400).send(message);
+app.post('/users', function(req, res) {
+  Users.findOne({ Username : req.body.Username })
+  .then(function(user) {
+    if (user) {
+      return res.status(400).send(req.body.Username + "already exists");
     } else {
-        users.push(newUser);
-        res.status(201).send(newUser);
+      Users
+      .create({
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday
+      })
+      .then(function(user) {res.status(201).json(user) })
+      .catch(function(error) {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      })
     }
+  }).catch(function(error) {
+    console.error(error);
+    res.status(500).send("Error: " + error);
+  });
 });
 
-// Allow users to update their user info (username, password, email, date of birth)
-app.put('/users/:username/:password', function (req, res) {
-    res.send('Your username/password successfully updated.');
-});
-app.put('/users/:username/:email/:dateofbirth', function (req, res) {
-    res.send('Your data successfully updated.');
+// Get all users
+app.get('/users', function(req, res) {
+
+  Users.find()
+  .then(function(users) {
+    res.status(201).json(users)
+  })
+  .catch(function(err) {
+    console.error(err);
+    res.status(500).send("Error: " + err);
+  });
 });
 
-// Allow users to add a movie to their list of favorites
-app.post('/users/:username/favorites', function (req, res) {
-    let newFavorite = req.body;
+// Get a user by username
+app.get('/users/:Username', function(req, res) {
+  Users.findOne({ Username : req.params.Username })
+  .then(function(user) {
+    res.json(user)
+  })
+  .catch(function(err) {
+    console.error(err);
+    res.status(500).send("Error: " + err);
+  });
+});
 
-    if (!newFavorite.title) {
-        const message = "Missing movie title";
-        res.status(400).send(message);
+// Update a user's info, by username
+app.put('/users/:Username', function(req, res) {
+  Users.findOneAndUpdate({ Username : req.params.Username }, { $set :
+  {
+    Username : req.body.Username,
+    Password : req.body.Password,
+    Email : req.body.Email,
+    Birthday : req.body.Birthday
+  }},
+  { new : true }, // This line makes sure that the updated document is returned
+  function(err, updatedUser) {
+    if(err) {
+      console.error(err);
+      res.status(500).send("Error: " + err);
     } else {
-        let user = users.find(function (user) {
-            return user.username === req.params.username
-        });
-        user.favorites.push(newFavorite);
-        res.status(201).send(user.favorites);
+      res.json(updatedUser)
     }
+  })
+});
+
+// Add a movie to a user's list of favorites
+app.post('/users/:Username/Movies/:MovieID', function(req, res) {
+  Users.findOneAndUpdate({ Username : req.params.Username }, {
+    $push : { FavoriteMovies : req.params.MovieID }
+  },
+  { new : true }, // This line makes sure that the updated document is returned
+  function(err, updatedUser) {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    } else {
+      res.json(updatedUser)
+    }
+  })
 });
 
 // Allow users to remove a movie from their list of favorites
-app.delete('/users/:username/favorites', function (req, res) {
-    res.send('One favorite movie deleted')
+app.put('/users/:Name/:MovieID', function(req, res)
+{
+  Users.findOneAndUpdate({ Name : req.params.Name }, {
+  $pull: { Movies : req.params.MovieID }
+  },
+  { new : true }, // This line makes sure that the updated document is returned
+  function(err, updatedUser) {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    }
+    else {
+      res.json(updatedUser);
+    }
+  });
 });
 
 // Allow existing users to deregister
-app.delete('/users/:username', function (req, res) {
-    res.send('User profile has been deleted')
+// Delete a user by username
+app.delete('/users/:Name', function(req, res) {
+  Users.findOneAndRemove({ Name: req.params.Name })
+  .then(function(user) {
+  if (!user) {
+    res.status(400).send(req.params.Name + " was not found");
+  }
+  else {
+    res.status(200).send(req.params.Name + " was deleted.");
+  }
+  })
+  .catch(function(err) {
+    console.error(err);
+    res.status(500).send("Error: " + err);
+  });
 });
 
 // Allows access to requested file from "public" folder
