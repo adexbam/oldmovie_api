@@ -1,11 +1,12 @@
 // Integrating Mongoose with a REST API
 const mongoose = require('mongoose');
 const Models = require('./models.js');
-
+const bodyParser = require('body-parser');
 const Movies = Models.Movie;
 const Users = Models.User;
 
 mongoose.connect('mongodb://localhost:27017/myFlixDB', {useNewUrlParser: true});
+mongoose.set('useFindAndModify', false);
 
 //importing express
 const express = require('express');
@@ -16,17 +17,16 @@ const morgan = require('morgan');
 app.use(express.static('public'));
 //logs requests using Morgan’s “common” format
 app.use(morgan('common'));
-
+app.use(bodyParser.json());
 //declaring variable for movie list
 
 // GET requests
 app.get('/', function(req, res) {
   res.send('Welcome to myFlix movies!');
 });
+
 // GET request for JSON object to return a list of ALL movies to the user
-
 app.get('/movies', function(req, res) {
-
   Movies.find()
   .then(function(movies) {
     res.status(201).json(movies)
@@ -37,9 +37,8 @@ app.get('/movies', function(req, res) {
   });
 });
 
-
 // Get a movie by title
-app.get('/movies/:title', function(req, res) {
+app.get('/movies/:Title', function(req, res) {
   Movies.findOne({ Title : req.params.Title })
   .then(function(movie) {
     res.json(movie)
@@ -51,10 +50,10 @@ app.get('/movies/:title', function(req, res) {
 });
 
 // GET request for JSON object to return data about a genre by title
-app.get('/movies/:title/genre',function(req,res) {
-  Movies.findOne({"Genre.Name":req.params.Name})
+app.get('/genres/:Genre',function(req,res) {
+  Movies.findOne({"Genre.Name":req.params.Genre})
   .then(function(movie) {
-    res.json(movie.Genre);
+    res.status(201).json(movie.Genre);
   })
   .catch(function(err) {
     console.error(err);
@@ -74,7 +73,7 @@ app.get('/directors/:Name',function(req,res) {
   });
 });
 
-//POST that Allows new users to register
+//Add a user
 app.post('/users', function(req, res) {
   Users.findOne({ Username : req.body.Username })
   .then(function(user) {
@@ -138,7 +137,7 @@ app.put('/users/:Username', function(req, res) {
   function(err, updatedUser) {
     if(err) {
       console.error(err);
-      res.status(500).send("Error: " + err);
+      res.status(500).send("Error: " +err);
     } else {
       res.json(updatedUser)
     }
@@ -162,8 +161,7 @@ app.post('/users/:Username/Movies/:MovieID', function(req, res) {
 });
 
 // Allow users to remove a movie from their list of favorites
-app.put('/users/:Name/:MovieID', function(req, res)
-{
+app.delete('/users/:Name/:MovieID', function(req, res) {
   Users.findOneAndUpdate({ Name : req.params.Name }, {
   $pull: { Movies : req.params.MovieID }
   },
@@ -181,21 +179,20 @@ app.put('/users/:Name/:MovieID', function(req, res)
 
 // Allow existing users to deregister
 // Delete a user by username
-app.delete('/users/:Name', function(req, res) {
-  Users.findOneAndRemove({ Name: req.params.Name })
+app.delete('/users/:Username', function(req, res) {
+  Users.findOneAndRemove({ Username: req.params.Username })
   .then(function(user) {
-  if (!user) {
-    res.status(400).send(req.params.Name + " was not found");
-  }
-  else {
-    res.status(200).send(req.params.Name + " was deleted.");
-  }
+    if (!user) {
+      res.status(400).send(req.params.Username + " was not found");
+    } else {
+      res.status(200).send(req.params.Username + " was deleted.");
+    }
   })
   .catch(function(err) {
     console.error(err);
     res.status(500).send("Error: " + err);
   });
-});
+})
 
 // Allows access to requested file from "public" folder
 app.use(function (err, req, res, next) {
