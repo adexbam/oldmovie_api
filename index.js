@@ -79,7 +79,7 @@ app.get('/directors/:Name', passport.authenticate('jwt', { session: false }), fu
 });
 
 //Add a user
-app.post('/users', passport.authenticate('jwt', { session: false }), function(req, res) {
+app.post('/users', function(req, res) {
   Users.findOne({ Username : req.body.Username })
   .then(function(user) {
     if (user) {
