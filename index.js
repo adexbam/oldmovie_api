@@ -6,7 +6,8 @@ const Movies = Models.Movie;
 const Users = Models.User;
 const validator = require('express-validator');
 
-mongoose.connect('mongodb://localhost:27017/myFlixDB', {useNewUrlParser: true});
+//mongoose.connect('mongodb://localhost:27017/myFlixDB', {useNewUrlParser: true});
+mongoose.connect(mongodb+srv:'//myFlixAdeDbAdmin:Ab@17051989@myflixadedb-0wp7v.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true });
 mongoose.set('useFindAndModify', false);
 
 //importing express
