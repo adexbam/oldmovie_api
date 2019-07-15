@@ -30,9 +30,9 @@ require('./passport');
 //importing and using CORS
 const cors = require('cors');
 app.use(cors());
-
+/*
 //CORS code to allow requests from only certain origins to be given access
-var allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+var allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://my-flix-api-ade.herokuapp.com'];
 
 app.use(cors({
   origin: function(origin, callback){
@@ -44,7 +44,7 @@ app.use(cors({
     return callback(null, true);
   }
 }));
-
+*/
 // GET requests
 app.get('/', function(req, res) {
   res.send('Welcome to myFlix movies!');
