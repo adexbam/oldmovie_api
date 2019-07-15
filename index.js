@@ -7,7 +7,7 @@ const Users = Models.User;
 const validator = require('express-validator');
 
 //mongoose.connect('mongodb://localhost:27017/myFlixDB', {useNewUrlParser: true});
-mongoose.connect(mongodb+srv:'//myFlixAdeDbAdmin:Ab@17051989@myflixadedb-0wp7v.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://myFlixAdeDbAdmin:Ab@17051989@myflixadedb-0wp7v.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true });
 mongoose.set('useFindAndModify', false);
 
 //importing express
@@ -30,7 +30,7 @@ require('./passport');
 //importing and using CORS
 const cors = require('cors');
 app.use(cors());
-/*
+
 //CORS code to allow requests from only certain origins to be given access
 var allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://my-flix-api-ade.herokuapp.com'];
 
@@ -44,7 +44,7 @@ app.use(cors({
     return callback(null, true);
   }
 }));
-*/
+
 // GET requests
 app.get('/', function(req, res) {
   res.send('Welcome to myFlix movies!');
