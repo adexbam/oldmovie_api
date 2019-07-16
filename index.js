@@ -7,7 +7,7 @@ const Users = Models.User;
 const validator = require('express-validator');
 
 //mongoose.connect('mongodb://localhost:27017/myFlixDB', {useNewUrlParser: true});
-mongoose.connect('mongodb+srv://myFlixAdeDbAdmin:Ab@17051989@myflixadedb-0wp7v.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://myFlixAdeDbAdmin:Ab@17051989@myflixadedb-2isws.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true });
 mongoose.set('useFindAndModify', false);
 
 //importing express
@@ -44,11 +44,6 @@ app.use(cors({
     return callback(null, true);
   }
 }));
-
-// GET requests
-app.get('/', function(req, res) {
-  res.send('Welcome to myFlix movies!');
-});
 
 // GET request for JSON object to return a list of ALL movies to the user
 app.get("/movies", passport.authenticate('jwt', { session: false }), function(req, res) {
@@ -252,6 +247,11 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 app.use(function (err, req, res, next) {
   console.error(err.stack);
   res.status(500).send('Ooops! Something went wrong!');
+});
+
+// GET requests
+app.get('/', function(req, res) {
+  res.send('Welcome to myFlix movies!');
 });
 
 // listen for requests
